@@ -19,16 +19,17 @@ int userChoice() {
     return choice;
 }
 //STOP ADDING BOOKS AND QUIT FROM THE ADDING OPTION
-int stopAdding(Library s, int done){
+int stopAdding(Library s,int size, int done){
     char stop[] = "*";
-
+// i would like to call this high stopping detecter and here is why :
     for (int i = 0; i < 30; i++)
     {
-       if (s.title[i] == stop[0] ||s.author[i] == stop[0] || s.ISBN[i] == stop[0])
-    {
+       if (s.title[i] == stop[0] ||s.author[i] == stop[0] || s.ISBN[i] == stop[0]) //with this we are comparing each letter with the stop sign *
+    { 
+        size--; // this is not working yet it is for removing the input which has the stoping sign
         return done = 1;
-    }else {return done=0;}
     }
+    }return done=0;
 }
 
 // CHECKING FOR ISBN VALIDATIONS
@@ -42,7 +43,7 @@ int ISBNvalidation(Library I) {
             valid = 0; 
             printf("ISBN must be 13 and only contains digits:\n");
             fgets(I.ISBN, sizeof(I.ISBN), stdin);
-            return 0; 
+            return  i = 0; 
         }
     }
 
@@ -55,12 +56,10 @@ int ISBNvalidation(Library I) {
 }
 
 // ADD BOOK FUNCTION 
-int addBook(Library b) {
+Library addBook(Library b, int done) {
     int n = 0;
-    int done;
     int digit;
     char stop[] = "*";
-    printf("when you are done adding books enter * \n\n");
         do
     {
         getchar();
@@ -73,34 +72,30 @@ int addBook(Library b) {
             {
                 printf("please enter a correct title:");
                 fgets(b.title, sizeof(b.title), stdin);
-                done = stopAdding(b,done);
+                done = stopAdding(b,n ,done);
             } while (strlen(b.title) < 2 && done == 0);
         }
-        if (stopAdding(b, done) == 0)
+        if (stopAdding(b,n, done) == 0)
         {
             printf(" enter the book author:");
             fgets(b.author, sizeof(b.author), stdin);  
-            done = stopAdding(b,done); 
+            done = stopAdding(b,n ,done); 
             if (strlen(b.author) < 5 && done == 0) // and the shortest author full name is 5 letters
         {
             do
             {
                 printf("please enter a correct full author name:");
                 fgets(b.author, sizeof(b.author), stdin);
-                done = stopAdding(b,done);
+                done = stopAdding(b,n ,done);
             } while (strlen(b.author) < 5 && done == 0);
         } 
-                if (stopAdding(b, done) == 0)
+                if (stopAdding(b,n, done) == 0)
                 {
-                    printf("enter the book ISBN:");
+                    printf("enter the book ISBN (13 digits):");
                     fgets(b.ISBN, sizeof(b.ISBN), stdin);
-                    done = stopAdding(b,done);
+                    done = stopAdding(b,n ,done);
                     do {
-                        if (done != 0)
-                        {
-                            break;
-                        }
-                        
+                        if (done != 0)break;
                     
                         if (strlen(b.ISBN) == 14 && done == 0) {
                             do {
@@ -110,14 +105,14 @@ int addBook(Library b) {
                                   break; 
                                 }
                     
-                                done = stopAdding(b, done);
+                                done = stopAdding(b,n, done);
                     
                             } while (strlen(b.ISBN) == 14 && done == 0);
                     
                         } else {
                             printf("ISBN must be 13 and only contains digits:\n");
                             fgets(b.ISBN, sizeof(b.ISBN), stdin);
-                            done = stopAdding(b, done);
+                            done = stopAdding(b,n, done);
                         }
                     } while (strlen(b.ISBN) != 14 && done == 0);
                         // getchar();    
@@ -138,24 +133,48 @@ int addBook(Library b) {
                     //     }
                 }     
     }
-        done = stopAdding(b,done);
+        done = stopAdding(b,n ,done);
         n++;
+        return b;
     } while (done == 0);
+    
 }
 
+// LOG ALL BOOK FUNCTION
+int displayLibrary(Library lbr[],int bookCount) {
+    for (int i = 0; i < bookCount; i++)
+    {
+        printf("book:%d \n",i+1);
+        printf("    title: %s", lbr[i].title);
+        printf("    author: %s", lbr[i].author);
+        printf("    ISBN: %s\n", lbr[i].ISBN);
+    }
+    
+}
 
 int main() {
     Library lbr[50];
     int choiceValue;
+    int bookCount = 0;
+    int done;
     do
     {
         choiceValue = userChoice();
         
         if (choiceValue == 1)
         {
-        addBook(lbr[50]);   
-        }
-         
+        printf("when you are done adding books enter * \n\n");
+            do
+            {
+                lbr[bookCount] = addBook(lbr[bookCount], done);   // each time the user enter a book , it is added to lbr[]
+                done = stopAdding(lbr[bookCount], bookCount, done);
+                bookCount++;
+            } while (done == 0);
+            done = 0;
+        }else if (choiceValue == 3)
+        {
+            displayLibrary(lbr, bookCount);
+        }   
     } while(choiceValue != 0);
     
 
