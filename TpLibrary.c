@@ -168,9 +168,10 @@ int searchBook(Library lbr[], int bookCount) {
 
 // LOG ALL BOOK FUNCTION
 int displayLibrary(Library lbr[],int bookCount) {
+    printf("Books in library:\n");
     for (int i = 0; i < bookCount; i++)
     {
-        printf("book:%d \n",i+1);
+        printf("%d. \n",i+1);
         printf("    title: %s", lbr[i].title);
         printf("    author: %s", lbr[i].author);
         printf("    ISBN: %s\n", lbr[i].ISBN);
@@ -236,7 +237,12 @@ int main() {
             {
                 lbr[bookCount] = addBook(lbr[bookCount], done);   // each time the user enter a book , it is added to lbr[]
                 done = stopAdding(lbr[bookCount], done);
-                bookCount++;
+                if (done == 0)
+                {
+                    bookCount++;
+                }
+                
+                
             } while (done == 0);
             done = 0;
         }else if (choiceValue == 2) // looking for books
@@ -253,5 +259,7 @@ int main() {
              } 
 
             } while(choiceValue != 0);
+            printf("Exiting the Programme....");
+            
 return 0;
 }
