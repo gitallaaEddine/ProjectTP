@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -17,6 +18,7 @@ int userChoice() {
     scanf("%d", &choice);
     printf("\n");
     printf("choice : %d \n\n", choice);
+    while (getchar() != '\n');  
     return choice;
 }
 //STOP ADDING BOOKS AND QUIT FROM THE ADDING OPTION
@@ -62,7 +64,6 @@ Library addBook(Library b, int done) {
     char stop[] = "*";
         do
     {
-        getchar();
         printf("book : %d \n", n+1);
         printf(" enter the book title:");
         fgets(b.title, sizeof(b.title), stdin);
@@ -156,14 +157,16 @@ int main() {
     Library lbr[50];
     int choiceValue;
     int bookCount = 0;
-    int done ,index, valid;
+    int done ,index, valid, match;
     char input[100]; 
     char stop[] = "*";
+    char bookTitle[30];
+    
     do
     {
         choiceValue = userChoice();
         
-        if (choiceValue == 1)
+        if (choiceValue == 1) // adding books
         {
         printf("when you are done adding books enter * \n\n");
             do
@@ -173,51 +176,65 @@ int main() {
                 bookCount++;
             } while (done == 0);
             done = 0;
-        }else if (choiceValue == 3)
+        }else if (choiceValue == 2) // looking for books
+        {
+            getchar();
+            printf("type book title:");
+            fgets(bookTitle, sizeof(bookTitle), stdin);
+            bookTitle[strcspn(bookTitle, "\n")] = 0;
+
+            for (int i = 0; i < bookCount; i++)
+            {
+                if (stricmp(lbr[i].title, bookTitle) == 0) 
+                {
+                    printf("Matching title found: %s\n", lbr[i].title);
+                    match = 1;
+                    break;
+                } 
+            }
+            if(match != 1)
+                {
+                    printf("no matching titles\n");
+                }
+        }else if (choiceValue == 3) // displaying books
         {
             displayLibrary(lbr, bookCount);
-        }else if (choiceValue == 4)
+        }else if (choiceValue == 4) // deleting books
         {
-            
+            do
+            {
+                valid = 1; 
+                printf("Type book number to delete or * to quit: ");
+                scanf("%s", input); 
 
-    do
-    {
-        valid = 1; 
-        printf("Type book number to delete or * to quit: ");
-        scanf("%s", input); 
-
-        // Check if the input contains only digits
-        for (int i = 0; input[i] != '\0'; i++) {
-            if (!isdigit(input[i])) {
-                
-                if (input[i] == stop[0])
-                {
-                    done = 1;
-                    valid = 1;
-                    break; 
-                }else
-                {
-                    valid = 0;
-                    break;
+                // Check if the input contains only digits
+                for (int i=0; input[i] !='\0';i++) {
+                    if (!isdigit(input[i])) {
+                        
+                        if (input[i] == stop[0])
+                        {
+                            done = 1;
+                            valid = 1;
+                            break; 
+                        }else
+                        {
+                            valid = 0;
+                            break;
+                        }
+                    }
                 }
-                
-                
-                 
-            }
-        }
+                index = atoi(input); 
+            } while (index > bookCount || valid == 0);
 
-        index = atoi(input); 
+            if (done != 1)
+            {
+                for (int i = index-1; i < bookCount-1; i++) {
+                    lbr[i] = lbr[i+1];
+                }
+                bookCount--;
+                    }
+            } 
 
-    } while (index > bookCount || valid == 0);
-
-    if (done != 1)
-    {
-        for (int i = index-1; i < bookCount-1; i++) {
-            lbr[i] = lbr[i+1];
-        }
-        bookCount--;
-            }
-    }        
-    } while(choiceValue != 0);
+            } while(choiceValue != 0);
 return 0;
 }
