@@ -141,6 +141,31 @@ Library addBook(Library b, int done) {
     
 }
 
+//SEARCH BOOK FUNCTION 
+int searchBook(Library lbr[], int bookCount) { 
+    char bookTitle[30];
+    int match = 0;
+
+    getchar(); 
+    printf("Type book title: ");
+    fgets(bookTitle, sizeof(bookTitle), stdin);
+    bookTitle[strcspn(bookTitle, "\n")] = '\0'; 
+
+    // Loop through all books to find a match
+    for (int i = 0; i < bookCount; i++) {
+        lbr[i].title[strcspn(lbr[i].title, "\n")] = '\0'; 
+        if (stricmp(lbr[i].title, bookTitle) == 0) {
+            printf("Matching title found: %s\n", lbr[i].title);
+            match = 1;
+            break;
+        }
+    }
+
+    if (match != 1) {
+        printf("No matching titles\n");
+    }
+}
+
 // LOG ALL BOOK FUNCTION
 int displayLibrary(Library lbr[],int bookCount) {
     for (int i = 0; i < bookCount; i++)
@@ -151,6 +176,44 @@ int displayLibrary(Library lbr[],int bookCount) {
         printf("    ISBN: %s\n", lbr[i].ISBN);
     }
     
+}
+
+//DELETE BOOK FUNCTION
+int deleteBook(Library lbr[], int bookCount) {
+    int done = 0, valid, index;
+    char input[100];
+    char stop[] = "*";
+
+    do {
+        valid = 1; 
+        printf("Type book number to delete or * to quit: ");
+        scanf("%s", input); 
+
+        // Check if the input contains only digits
+        for (int i = 0; input[i] != '\0'; i++) {
+            if (!isdigit(input[i])) {
+                if (input[i] == stop[0]) {
+                    done = 1;
+                    valid = 1;
+                    break; 
+                } else {
+                    valid = 0;
+                    break;
+                }
+            }
+        }
+
+        index = atoi(input); 
+    } while (index > bookCount || valid == 0);
+
+    if (done != 1) {
+        for (int i = index - 1; i < bookCount - 1; i++) {
+            lbr[i] = lbr[i + 1];
+        }
+        bookCount--;
+    }
+
+    return bookCount;  
 }
 
 int main() {
@@ -178,62 +241,16 @@ int main() {
             done = 0;
         }else if (choiceValue == 2) // looking for books
         {
-            getchar();
-            printf("type book title:");
-            fgets(bookTitle, sizeof(bookTitle), stdin);
-            bookTitle[strcspn(bookTitle, "\n")] = 0;
+            searchBook(lbr, bookCount);
 
-            for (int i = 0; i < bookCount; i++)
-            {
-                if (stricmp(lbr[i].title, bookTitle) == 0) 
-                {
-                    printf("Matching title found: %s\n", lbr[i].title);
-                    match = 1;
-                    break;
-                } 
-            }
-            if(match != 1)
-                {
-                    printf("no matching titles\n");
-                }
         }else if (choiceValue == 3) // displaying books
         {
             displayLibrary(lbr, bookCount);
         }else if (choiceValue == 4) // deleting books
         {
-            do
-            {
-                valid = 1; 
-                printf("Type book number to delete or * to quit: ");
-                scanf("%s", input); 
+            bookCount = deleteBook(lbr, bookCount);
 
-                // Check if the input contains only digits
-                for (int i=0; input[i] !='\0';i++) {
-                    if (!isdigit(input[i])) {
-                        
-                        if (input[i] == stop[0])
-                        {
-                            done = 1;
-                            valid = 1;
-                            break; 
-                        }else
-                        {
-                            valid = 0;
-                            break;
-                        }
-                    }
-                }
-                index = atoi(input); 
-            } while (index > bookCount || valid == 0);
-
-            if (done != 1)
-            {
-                for (int i = index-1; i < bookCount-1; i++) {
-                    lbr[i] = lbr[i+1];
-                }
-                bookCount--;
-                    }
-            } 
+             } 
 
             } while(choiceValue != 0);
 return 0;
