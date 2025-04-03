@@ -64,7 +64,7 @@ Library addBook(Library b, int done) {
     char stop[] = "*";
         do
     {
-        printf("book : %d \n", n+1);
+        printf("•book :\n" );
         printf(" enter the book title:");
         fgets(b.title, sizeof(b.title), stdin);
         if (strlen(b.title) < 2) //i did some researches and i found that the shortest book title is one letter
@@ -92,7 +92,7 @@ Library addBook(Library b, int done) {
         } 
                 if (stopAdding(b, done) == 0)
                 {
-                    printf("enter the book ISBN (13 digits):");
+                    printf("enter the book ISBN (13 digits):\n");
                     fgets(b.ISBN, sizeof(b.ISBN), stdin);
                     done = stopAdding(b ,done);
                     do {
