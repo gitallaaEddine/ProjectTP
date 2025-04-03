@@ -116,22 +116,7 @@ Library addBook(Library b, int done) {
                             done = stopAdding(b, done);
                         }
                     } while (strlen(b.ISBN) != 14 && done == 0);
-                        // getchar();    
-         //i tried using this but it doesn't work when the user doesn't enter a digit
-                    // printf(" enter the book ISBN:");
-                    // scanf("%lld", &b.ISBN);
-                    // if (ISBNvalidation(b.ISBN) < 14) // ISBN number contains 13 digit
-                    //     {
-                    //         do
-                    //         {
-                    //             printf("please enter a correct ISBN number 13 digit:");
-                    //             scanf("%lld", &b.ISBN);
-                    //         } while (ISBNvalidation(b.ISBN) == 14 );
-                    //     }
-                    // if (b.ISBN == 0)
-                    //     {
-                    //         return done = 1;
-                    //     }
+                        
                 }     
     }
         done = stopAdding(b ,done);
