@@ -77,7 +77,7 @@ The main function includes the entire program:
 • Exits when the user chooses option 0
 ````
 
-![MAIN](screenShots\Main.png)
+![MAIN](screenShots/Main.png)
 
 ### userChoice Function
 ````c
@@ -98,7 +98,7 @@ Reads user's choice using scanf
 Clears input buffer using while (getchar() != '\n')
 Returns the selected choice
 ````
-![user choice function](screenShots\userChoice.png)
+![user choice function](screenShots/userChoice.png)
 ## 1. addBook Function
 ````c
 Library addBook(Library b, int done)  {
