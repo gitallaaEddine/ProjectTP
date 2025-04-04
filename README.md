@@ -101,8 +101,9 @@ Code Explanation:
 • Validation fails if non-digit found or length != 13
 • Returns boolean validation result
 ````
-![Add Book Function](screenShots\addBook.png)
-![check&stop add Book Function](screenShots\check&stop.png)
+
+![Add Book Function](screenShots/addBook.png)
+![Check and Stop Function](screenShots/check&stop.png)
 ## 2. searchBook Function
 ````c
 void searchBook(Library s[], int n) {
@@ -144,7 +145,7 @@ Matching title found:
 ```
 Screenshot:
 
-![seaerch Book Function](screenShots\searchBook.png)
+![Search Book Function](screenShots/searchBook.png)
 
 ## 3. displayLibrary Function
 ````c
@@ -179,7 +180,7 @@ Books in library:
 ```
 Screenshot:
 
-![diplay Book Function](screenShots\logBooks.png)
+![Display Book Function](screenShots/logBooks.png)
 
 ## 4. deleteBook Function
 ````c
@@ -250,4 +251,4 @@ After deletion:
    ISBN: 9783161484100
 ```
 
-![delet Book Function](screenShots\deletBook.png)
+![Delete Book Function](screenShots/deletBook.png)
