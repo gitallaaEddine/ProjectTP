@@ -1,41 +1,42 @@
 # Library Management System (C)
 
 ## Overview
+A C-based library management system with robust input validation and user-friendly features.
 
-This is a simple library management system implemented in C. It allows users to perform basic library operations such as adding books with validation, searching for books by title, displaying all books, and deleting books. The system emphasizes input validation and provides a user-friendly experience.
+## Core Functions :
+(This are not the whole functions just highlights for the main titles in the function to explain them you can find the function in the C file code or in the screenshots)
 
-## How to Run
+## 1. addBook Function
+````c
+Library addBook(Library b, int done)  {
 
-1.  **Compile the program:**
+    do {
+        // Get book title with validation
+        printf("enter the book title:");
+        fgets(b.title, sizeof(b.title), stdin);
 
-    ```bash
-    gcc TpLibrary.c -o library
-    ```
-
-2.  **Run the program:**
-
-    ```bash
-    ./library
-    ```
-
-## Features and Functionality
-
-### 1. Add a Book (`addBook` function)
-
-This function allows users to add new books to the library. It enforces strict validation rules to ensure data integrity.
-
-**Validation Rules:**
-
-*   **Title:** Must be at least 2 characters long.
-*   **Author:** Must be a real name with at least 5 characters.
-*   **ISBN:** Must be exactly 13 digits (numbers only).
-
-**Quit Functionality:**
-
-*   The user can quit the `addBook` function at any input prompt by entering `*`.
-
-**Example of Invalid Input Handling:**
-
+        // Title validation loop - minimum 2 characters
+        if (strlen(b.title) < 2) {
+            do {
+                printf("please enter a correct title:");
+                fgets(b.title, sizeof(b.title), stdin);
+                done = stopAdding(b, done);
+            } while (strlen(b.title) < 2 && done == 0);
+        }
+        // ...existing code...
+    } while (condition);
+}
+````
+Code Explanation:
+````yaml
+• Uses a do-while loop to continuously prompt for input until valid or user quits
+• fgets reads input including spaces (safer than scanf)
+• Nested validation loop checks title length >= 2
+• stopAdding checks for "*" escape character after each input
+• Similar validation patterns for author and ISBN
+• Returns updated library structure
+````
+**Example of inputs and Invalid Input Handling:**
 ```yaml
 Enter the book title: A
 Please enter a correct title: Harry Potter
@@ -46,34 +47,123 @@ Please enter a correct full author name: J.K. Rowling
 Enter the book ISBN: 12345A7890123
 ISBN must be 13 digits and contain only numbers: 9783161484100
 ```
-Screenshot:
+### the next funtions are nested functions of the addBook function
 
-[Insert Screenshot of Adding a Book Here]
-
-2. Search for a Book by Title (searchBook function)
-This function enables users to search for books by their title.
-
-Key Features:
-
-Case-insensitive search.
-
-Displays book details if a match is found.
-The user can quit by entering *.
+#### 1.1. stopAdding Function
+````c
+int stopAdding(Library s, int done) {
+    char stop[] = "*";
+    
+    // Check title, author, and ISBN for "*"
+    if(strstr(s.title, stop) || 
+       strstr(s.author, stop) || 
+       strstr(s.isbn, stop)) {
+        return 1;
+    }
+    return 0;
+}
+````
+Code Explanation:
+````yaml
+• Uses strstr to search for "*" substring
+• Checks all three fields (title, author, ISBN)
+• Returns 1 if "*" found, 0 otherwise
+• Single responsibility principle - only handles escape detection
+````
+#### 1.2. ISBNvalidation Function
+````c
+int ISBNvalidation(Library I) {
+    int i = 0;
+    int valid = 1;
+    
+    // Check each character
+    while(I.isbn[i] != '\0' && I.isbn[i] != '\n') {
+        if(!isdigit(I.isbn[i])) {
+            valid = 0;
+            break;
+        }
+        i++;
+    }
+    
+    // Verify length
+    if(i != 13) {
+        valid = 0;
+    }
+    
+    return valid;
+}
+````
+Code Explanation:
+````yaml
+• while loop processes each character until end or newline
+• isdigit checks if character is numeric
+• Counter i tracks ISBN length
+• Validation fails if non-digit found or length != 13
+• Returns boolean validation result
+````
+![Add Book Function](screenShots\addBook.png)
+![check&stop add Book Function](screenShots\check&stop.png)
+## 2. searchBook Function
+````c
+void searchBook(Library s[], int n) {
+    char searchTitle[50];
+    int found = 0;
+    
+    printf("Enter title to search: ");
+    fgets(searchTitle, sizeof(searchTitle), stdin);
+    
+    // Loop through library array
+    for(int i = 0; i < n; i++) {
+        // Case-insensitive comparison
+        if(stricmp(s[i].title, searchTitle) == 0) {
+            // Display book details
+            found = 1;
+            break;
+        }
+    }
+}
+````
+Code Explanation:
+```yaml
+• Uses for loop to iterate through library array
+• stricmp performs case-insensitive string comparison
+• Boolean flag found tracks search success
+• Early exit when match found
+• Handles "*" escape sequence
+```
 Example:
 ```yaml
 Type book title: harry potter
 Matching title found:
    Title: Harry Potter
-   Author: J.K. Rowling
-   ISBN: 9783161484100
+```
+```yaml
+Type book title: the unknow
+Matching title found:
+   No matching titles
 ```
 Screenshot:
 
-[Insert Screenshot of Searching for a Book Here]
+![seaerch Book Function](screenShots\searchBook.png)
 
-3. Display All Books (displayLibrary function)
-This function lists all the books currently stored in the library, providing full details for each book.
-
+## 3. displayLibrary Function
+````c
+void displayLibrary(Library l[], int n) {
+    for(int i = 0; i < n; i++) {
+        printf("\n%d. \n", i+1);
+        printf("   Title: %s", l[i].title);
+        printf("   Author: %s", l[i].author);
+        printf("   ISBN: %s\n", l[i].isbn);
+    }
+}
+````
+Code Explanation:
+```yaml
+• Simple for loop traverses array
+• Formatted printing with consistent indentation
+• Index numbering starts at 1 for user-friendliness
+• Each book displayed with complete details
+```
 Output Format:
 ```yaml
 Books in library:
@@ -89,23 +179,75 @@ Books in library:
 ```
 Screenshot:
 
-[Insert Screenshot of Displaying Books Here]
+![diplay Book Function](screenShots\logBooks.png)
 
-4. Delete a Book (deleteBook function)
-This function allows users to delete a book from the library by specifying its index.
+## 4. deleteBook Function
+````c
+int deleteBook(Library lbr[], int bookCount) {
+    int done = 0, valid, index;
+    char input[100];
+    char stop[] = "*";
 
-Input:
+    do {
+        valid = 1; 
+        printf("Type book number to delete or * to quit: ");
+        scanf("%s", input); 
 
-The user is prompted to enter the index of the book to delete.
-The user can quit by entering *.
-Note:
+        for (int i = 0; input[i] != '\0'; i++) {
+            if (!isdigit(input[i])) {
+                if (input[i] == stop[0]) {
+                    done = 1;
+                    valid = 1;
+                    break; 
+                } else {
+                    valid = 0;
+                    break;
+                }
+            }
+        }
 
-The index is based on the order in which the books are displayed.
-5. Quit the Program
-To exit the program, choose option 0 from the main menu.
+        index = atoi(input); 
+    } while (index > bookCount || valid == 0);
 
-Example:
+    if (done != 1) {
+        for (int i = index - 1; i < bookCount - 1; i++) {
+            lbr[i] = lbr[i + 1];
+        }
+        bookCount--;
+    }
+
+    return bookCount;
+}
+````
+
+**Code Explanation:**
 ```yaml
-Enter your choice: 0
-Exiting the program...
+• Accepts user input for book number or "*" to quit
+• Validates input is numeric or escape character
+• Shifts books left to remove selected book
+• Updates total book count
 ```
+
+**Output Format:**
+```yaml
+Type book number to delete or * to quit: 2
+
+Before deletion:
+1.
+   Title: Harry Potter
+   Author: J.K. Rowling
+   ISBN: 9783161484100
+
+2.
+   Title: The Great Gatsby
+   Author: F. Scott Fitzgerald
+   ISBN: 9780743273565
+
+After deletion:
+1.
+   Title: Harry Potter
+   Author: J.K. Rowling
+   ISBN: 9783161484100
+```
+
+![delet Book Function](screenShots\deletBook.png)
