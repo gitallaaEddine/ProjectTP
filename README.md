@@ -3,9 +3,102 @@
 ## Overview
 A C-based library management system with robust input validation and user-friendly features.
 
+## Getting Started
+
+### 1. Clone the Repository
+To get a local copy of this project, run this command in your terminal:
+
+```bash
+git clone https://github.com/gitallaaEddine/ProjectTP.git
+````
+
+ ### 2. Navigate to Project Directory
+````bash
+cd ProjectTP
+````
+
+### 3.Compile and Run
+````bash
+gcc TpLibrary.c -o library
+./library
+````
+
 ## Core Functions :
 (This are not the whole functions just highlights for the main titles in the function to explain them you can find the function in the C file code or in the screenshots)
 
+## 0.MAIN
+## Main Function Overview
+````c
+int main() {
+    Library lbr[50];
+    int choiceValue;
+    int bookCount = 0;
+    int done ,index, valid, match;
+    char input[100]; 
+    char stop[] = "*";
+    char bookTitle[30];
+    do
+    {
+        choiceValue = userChoice();
+        
+        if (choiceValue == 1) // adding books
+        {
+        printf("when you are done adding books enter * \n\n");
+            do
+            {
+                lbr[bookCount] = addBook(lbr[bookCount], done);   // each time the user enter a book , it is added to lbr[]
+                done = stopAdding(lbr[bookCount], done);
+                if (done == 0)
+                {
+                    bookCount++;
+                }
+            } while (done == 0);
+            done = 0;
+        }else if (choiceValue == 2) // looking for books
+        {
+            searchBook(lbr, bookCount);
+        }else if (choiceValue == 3) // displaying books
+        {
+            displayLibrary(lbr, bookCount);
+        }else if (choiceValue == 4) // deleting books
+        {
+            bookCount = deleteBook(lbr, bookCount);
+             } 
+            } while(choiceValue != 0);
+            printf("Exiting the Programme....");
+return 0;
+}
+````
+The main function includes the entire program:
+````yaml
+• Initializes the library and book count
+• Enters a loop that presents the menu and processes user choices
+• Calls the appropriate functions based on user input
+• Exits when the user chooses option 0
+````
+
+![MAIN](screenShots\Main.png)
+
+### userChoice Function
+````c
+int userChoice() {
+    int choice;
+    printf("                === library === \n          1. add a book\n          2. look for a book by title\n          3. log all books\n          4. delete a book\n          0. quite\n\n enter your choice: ");
+    scanf("%d", &choice);
+    printf("\n");
+    printf("choice : %d \n\n", choice);
+    while (getchar() != '\n');  
+    return choice;
+}
+````
+Code Explanation:
+````yaml
+Displays main menu options
+Reads user's choice using scanf
+Clears input buffer using while (getchar() != '\n')
+Returns the selected choice
+````
+![user choice function](screenShots\userChoice.png)
 ## 1. addBook Function
 ````c
 Library addBook(Library b, int done)  {
